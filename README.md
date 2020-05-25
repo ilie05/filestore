@@ -27,3 +27,19 @@ npm start
 ```json
 npm run build
 ```
+
+
+## For deploying
+
+
+
+```json
+
+npm run build
+
+```
+
+## Docker
+```json
+docker run -t -i -p 8000:8000 backend:version1.0
+```
