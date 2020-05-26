@@ -3,7 +3,7 @@
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS += ['http://domain.com']
+ALLOWED_HOSTS += ['http://ec2-54-211-123-16.compute-1.amazonaws.com']
 WSGI_APPLICATION = 'home.wsgi.prod.application'
 
 DATABASES = {
