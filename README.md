@@ -44,4 +44,5 @@ npm run build
 docker run -t -i -p 8000:8000 backend:version1.0    # run an image
 docker exec -t -i container_id bash                 # connect to a running container
 docker build -t backend:vers1.0 .
+docker rmi -f $(sudo docker images -a -q)           # remove all containers and images
 ```
