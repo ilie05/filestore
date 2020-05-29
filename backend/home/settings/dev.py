@@ -2,7 +2,8 @@
 
 from .base import *
 
-ALLOWED_HOSTS += ['127.0.0.1', 'http://ec2-54-211-123-16.compute-1.amazonaws.com']
+# ALLOWED_HOSTS += ['127.0.0.1', 'http://ec2-54-211-123-16.compute-1.amazonaws.com']
+ALLOWED_HOSTS += ['*']
 DEBUG = True
 
 WSGI_APPLICATION = 'home.wsgi.dev.application'
