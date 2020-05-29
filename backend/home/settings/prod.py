@@ -28,4 +28,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+CORS_ORIGIN_WHITELIST = (
+    'http://ec2-54-84-43-245.compute-1.amazonaws.com:5000',
+)
