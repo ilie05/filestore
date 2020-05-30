@@ -1,4 +1,4 @@
-'''Use this for production'''
+"""Use this for production"""
 
 from .base import *
 
@@ -7,18 +7,18 @@ ALLOWED_HOSTS += ['*']
 WSGI_APPLICATION = 'home.wsgi.prod.application'
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'database-1',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'qweasdzxc',
-    #     'HOST': 'database-1.cocz6fyvolcf.us-east-1.rds.amazonaws.com',
-    #     'PORT': '5432',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'qweasdzxc',
+        'HOST': 'database-1.cocz6fyvolcf.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -31,4 +31,5 @@ AUTH_PASSWORD_VALIDATORS = [
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 CORS_ORIGIN_WHITELIST = (
     'http://ec2-52-87-152-7.compute-1.amazonaws.com:5000',
+    # 'http://localhost:3000',
 )
