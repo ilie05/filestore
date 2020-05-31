@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework import generics, permissions, parsers
 from .models import Snippet
 from rest_framework.response import Response
@@ -7,24 +8,40 @@ from .serializers import SnippetSerializer, FileSerializer
 from .s3_utils import Boto3Client
 
 
-class FileUploadView(APIView):
-    # http_method_names = ['GET', 'PUT', 'DELETE', 'POST']
-    # permission_classes = (permissions.AllowAny,)
-    def post(self, request):
-        if not request.user.is_authenticated:
+class FileView(APIView):
+    def post(self, req):
+        if not req.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        up_file = request.FILES['profile_pic']
+        up_file = req.FILES['profile_pic']
 
-        boto_client = Boto3Client(request.user)
+        boto_client = Boto3Client(req.user)
         boto_client.upload_file(up_file)
 
-        serializer = FileSerializer(data={})    # parse data to serializer
+        serializer = FileSerializer(data={})  # parse data to serializer
         if serializer.is_valid():
-            serializer.save(name=up_file.name, size=up_file.size, user=request.user)
+            serializer.save(name=up_file.name, size=up_file.size, user=req.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, req):
+        filename = req.query_params.get('name')
+
+        boto_client = Boto3Client(req.user)
+        file_content, mime_type = boto_client.get_file(filename)
+
+        response = HttpResponse(file_content, content_type=mime_type)
+        response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+        response['Access-Control-Expose-Headers'] = 'Content-Disposition'
+        return response
+
+
+class FilesView(APIView):
+    def get(self, req):
+        boto_client = Boto3Client(req.user)
+        files = boto_client.list_files()
+        return Response(files, status=status.HTTP_200_OK)
 
 
 class SnippetList(generics.ListCreateAPIView):
@@ -35,7 +52,6 @@ class SnippetList(generics.ListCreateAPIView):
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
-
 
 # @api_view(['GET', 'POST'])
 # def simple_upload(request):
