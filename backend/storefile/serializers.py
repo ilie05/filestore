@@ -11,5 +11,5 @@ class SnippetSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ['id', 'name', 'user', 'size']
-        read_only_fields = ('user', 'size', 'name')
+        fields = ['id', 'name', 'user', 'size', 'created']
+        read_only_fields = ('user', 'size', 'name', 'created')

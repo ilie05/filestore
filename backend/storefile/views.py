@@ -25,23 +25,19 @@ class FileUploadView(APIView):
     # http_method_names = ['GET', 'PUT', 'DELETE', 'POST']
     # permission_classes = (permissions.AllowAny,)
     def post(self, request):
-        print("Asdasd")
-
         if not request.user.is_authenticated:
-            return Response({"data": 152}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         up_file = request.FILES['profile_pic']
         with open('temp/' + up_file.name, 'wb+') as file:
             for chunk in up_file.chunks():
                 file.write(chunk)
 
-
-        return Response({"data": 152}, status=status.HTTP_200_OK)
-
-        serializer = SnippetSerializer(data=request.data)
+        serializer = FileSerializer(data={})    # parse data to serializer
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(name=up_file.name, size=up_file.size, user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
