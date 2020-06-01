@@ -11,9 +11,6 @@ RUN pip3 install --upgrade pip -r requirements.txt
 # Add the rest of the code
 COPY . /app/backend
 
-# create the app
-RUN python manage.py startapp storefile
-
 # Make migrations
 RUN python3 manage.py makemigrations
 RUN python3 manage.py migrate

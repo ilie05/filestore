@@ -29,6 +29,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://ec2-52-87-152-7.compute-1.amazonaws.com:5000',
+    'http://ec2-18-212-163-59.compute-1.amazonaws.com:5000',
     'http://localhost:3000',
 )
