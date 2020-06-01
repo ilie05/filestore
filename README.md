@@ -1,11 +1,3 @@
-# Django React Boilerplate
-
-[![alt text](https://github.com/justdjango/django-react-boilerplate/blob/master/thumbnail.png "Logo")](https://youtu.be/YKYVv0gm_0o)
-
-This repository contains a boilerplate project setup for Django and React. The project contains backend user authentication with the Django Rest Framework and rest-auth. The frontend has react redux setup for user authentication by storing the token in localstorage.
-
-[Watch the tutorial on how to integrate Django and React](https://youtu.be/YKYVv0gm_0o)
-
 ## Backend development workflow
 
 ```json
@@ -29,21 +21,11 @@ npm run build
 ```
 
 
-## For deploying
-
-
-
-```json
-
-npm run build
-
-```
-
 ## Docker
 ```json
-docker run -t -i -p 8000:8000 backend:version1.0    # run an image
+docker run -t -i -p 8000:8000 backend               # run an image
 docker exec -t -i container_id bash                 # connect to a running container
-docker build -t backend:vers1.0 .
+docker build -t backend .
 docker rmi -f $(sudo docker images -a -q)           # remove all containers and images
 sudo docker system prune -a -f                      # clear all the space taken by dokcer
 ```
