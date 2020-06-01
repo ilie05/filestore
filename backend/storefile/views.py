@@ -14,7 +14,7 @@ class FileView(APIView):
         if not req.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        up_file = req.FILES['profile_pic']
+        up_file = req.FILES['file_content']
         boto_client = Boto3Client(req.user)
         boto_client.upload_file(up_file)
 

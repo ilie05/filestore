@@ -62,4 +62,7 @@ class Boto3Client:
         return file_content, mime_type
 
     def delete_file(self, filename):
-        self.client.delete_object(Bucket=self.bucket_name, Key=filename)
+        try:
+            self.client.delete_object(Bucket=self.bucket_name, Key=filename)
+        except Exception as e:
+            print(str(e))
