@@ -1,3 +1,4 @@
+import os
 from django.http import HttpResponse
 from rest_framework import generics, permissions, parsers
 from .models import Snippet
@@ -14,7 +15,6 @@ class FileView(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         up_file = req.FILES['profile_pic']
-
         boto_client = Boto3Client(req.user)
         boto_client.upload_file(up_file)
 
@@ -26,15 +26,38 @@ class FileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, req):
-        filename = req.query_params.get('name')
+        if not req.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+        filename = req.query_params.get('name')
         boto_client = Boto3Client(req.user)
         file_content, mime_type = boto_client.get_file(filename)
 
-        response = HttpResponse(file_content, content_type=mime_type)
+        response = LogSuccessResponse(file_content, content_type=mime_type)
+        response['filepath'] = 'temp/{}/{}'.format(boto_client.bucket_name, filename)
         response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
         response['Access-Control-Expose-Headers'] = 'Content-Disposition'
         return response
+
+    def delete(self, req):
+        if not req.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        filename = req.data.get('filename')
+        boto_client = Boto3Client(req.user)
+        boto_client.delete_file(filename)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LogSuccessResponse(HttpResponse):
+    def close(self):
+        super(LogSuccessResponse, self).close()
+        # get the file to be deleted from header, then delete the header
+        if self.status_code == 200:
+            file_to_delete = self._headers['filepath'][1]
+            del self._headers['filepath']
+            os.remove(file_to_delete)
 
 
 class FilesView(APIView):
@@ -53,17 +76,6 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
-# @api_view(['GET', 'POST'])
-# def simple_upload(request):
-#     print("asd")
-#     if request.method == 'POST' and request.FILES['my_file']:
-#         my_file = request.FILES['my_file']
-#         fs = FileSystemStorage()
-#         filename = fs.save(myfile.name, my_file)
-#         uploaded_file_url = fs.url(filename)
-#         return render(request, 'core/simple_upload.html', {
-#             'uploaded_file_url': uploaded_file_url
-#         })
 
 # class ProfilePictureView(generics.CreateAPIView):
 #     permission_classes = (permissions.AllowAny,)
